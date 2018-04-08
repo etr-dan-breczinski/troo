@@ -2,7 +2,7 @@ import Troo from './Troo'
 
 // import Cone from './Cone'
 const troo = new Troo()
-const AddAction = troo.AddAction.bind(troo)
+// const AddAction = troo.AddAction.bind(troo)
 const Actions = troo.Actions
 
 
@@ -13,4 +13,4 @@ const Actions = troo.Actions
 // export { AddAction, Actions, Component, Root, Route }
 // export default cone
 
-export { AddAction, Actions }
+export { Actions }

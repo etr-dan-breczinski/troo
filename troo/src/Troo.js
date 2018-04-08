@@ -4,26 +4,26 @@ import { pure, toClass } from 'recompose'
 import { isFunction } from 'lodash'
 import ImmutableStore from 'immutable-js-store'
 import page from 'page'
-// import queryString from 'query-string'
-
 import Wrapper from './Wrapper'
-
-// console.log('window', window)
 
 class Cone {
   constructor() {
-    this.Actions = {};
+  	const self = this
+    this._Actions = {};
     this.initStore = this.initStore.bind(this);
-    this.AddAction = this.AddAction.bind(this);
-    // page.start();
+    this.store = null;
+
+	this.Actions = new Proxy(this._Actions, {
+	    set: function(obj, prop, callback) {
+	    	obj[prop] = (args = {}) => {
+	    		callback(self.store, args)
+	    	};
+	    	return true;
+	    }
+	});
   }
   initStore(initialData) {
     this.store = new ImmutableStore(initialData);
-  }
-  AddAction(actionName, action) {
-    this.Actions[actionName] = (data = {}) => {
-      action(data, this.store);
-    }
   }
   Component(componentFunction) {
     const componentClass = toClass(componentFunction);
@@ -31,7 +31,6 @@ class Cone {
       nextProps.forEach((value, key) => {
         if (!isFunction(value) &&
           componentClass.props[key] !== value) {
-
           return true;
         }
       });
@@ -39,15 +38,6 @@ class Cone {
     }
     return componentClass;
   }
-  // Route = {
-  //   get: (path, cb) => {
-  //     page(path, ({ params }) => {
-  //       const queryParams = queryString.parse(location.search)
-  //       const mergedParams = Object.assign({}, params, queryParams)
-  //       cb(mergedParams, this.store)
-  //     })
-  //   }
-  // }
   Root(element, componentFunction, initialData = {}) {
     const Root = pure(componentFunction);
     this.initStore(initialData);
@@ -60,7 +50,5 @@ class Cone {
     });
   }
 }
-
-
 
 export default Cone

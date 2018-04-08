@@ -3,10 +3,16 @@ const express = require('express');
 // const troo = require('./src');
 const troo = require('./troo');
 
-troo.AddAction('foo', () => { console.log('bar') })
 
-troo.Actions.foo()
-// console.log('troo', troo.Actions)
+
+// troo.AddAction('foo', () => { console.log('bar') })
+troo.Actions.foo = (arg1, arg2) => {
+	console.log('in foo callback', arg1, arg2.biz);
+}
+
+troo.Actions.foo({biz: 'bap'});
+
+
 
 const BUILD_DIRECTORY = __dirname
 
