@@ -31,6 +31,8 @@ class Cone {
     this.initStore = this.initStore.bind(this);
     this.store = null;
 
+    this._root = () => {};
+
 	this.Actions = new Proxy(this._Actions, {
 	    set: function(obj, prop, callback) {
 	    	obj[prop] = (args = {}) => {
@@ -39,6 +41,18 @@ class Cone {
 	    	return true;
 	    }
 	});
+
+	this.getRoot = () => {
+		return this._root;
+	}
+
+	this.Root = (callback, initialData) => {
+		console.log('callback1', callback, this._root)
+		this._root = callback;
+		console.log('callback2', callback, this._root)
+	}
+	this.Root = this.Root.bind(this)
+	// this.Root = this.Root.bind(this)
   }
   initStore(initialData) {
     this.store = new ImmutableStore(initialData);
@@ -56,17 +70,27 @@ class Cone {
     }
     return componentClass;
   }
-  Root(element, componentFunction, initialData = {}) {
-    const Root = pure(componentFunction);
-    this.initStore(initialData);
-    const store = this.store;
-    document.addEventListener('DOMContentLoaded', function() {
-        ReactDOM.render(
-          <Wrapper initialData={initialData} root={Root} store={store} />,
-          element
-        );
-    });
-  }
+  // Root(callback, initialData) {
+  // 	// console.log()
+  // 	// this._root = callback;
+  // 	// console.log('in root callback', this._root)
+  // }
+  // Root({ data, children }) => {
+  // 	if (!data) { return null; }
+  // 	return <div>{children}</div>
+  // }
+
+  // Root(element, componentFunction, initialData = {}) {
+  //   const Root = pure(componentFunction);
+  //   this.initStore(initialData);
+  //   const store = this.store;
+  //   document.addEventListener('DOMContentLoaded', function() {
+  //       ReactDOM.render(
+  //         <Wrapper initialData={initialData} root={Root} store={store} />,
+  //         element
+  //       );
+  //   });
+  // }
 }
 
 export default Cone

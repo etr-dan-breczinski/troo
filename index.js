@@ -1,30 +1,14 @@
 const webpack = require('webpack');
 const express = require('express');
-// const troo = require('./src');
 const troo = require('./troo');
 const Router = troo.Router
+const ReactDOMServer = require('react-dom/server');
 
-// console.log('asdf 20')
-// troo.Router.get.foo = (() => {
-// // 	console.log('asdfasdfasdf')
-// })
-// console.log('asdf 21')
-
-// console.log('troo.Router', troo.Router.get)
-// console.log(troo.Routes)
-
-
-// troo.AddAction('foo', () => { console.log('bar') })
-// troo.Actions.foo = (arg1, arg2) => {
-// 	console.log('in foo callback', arg1, arg2.biz);
-// }
-
-// troo.Actions.foo({biz: 'bap'});
-// console.log('troo.Router', troo.Router)
-
+// import { renderToString } from 'react-dom/server';
 
 const BUILD_DIRECTORY = __dirname
-
+const server = express()
+server.listen(8080)
 
 // TODO - move this externally
 const config = {
@@ -103,12 +87,32 @@ webpack({
 		const app = require('./build/app.js').default;
 		app({
 			Server: troo.Server,
-			Router: troo.Router
+			Router: troo.Router,
+			Root: troo.Root
 		});
-		Router.get.bar = (args) => {
-			console.log('in app router', args)
-		}
-		console.log('Routes', troo.Routes)
+
+		// console.log('troo.root', troo.root)
+		// console.log('asdf 1', troo._root)
+		// troo._root()
+		// console.log('asdf 2')
+		// console.log('troo.getRoot()', troo.getRoot())
+
+		const root = troo.getRoot();
+
+		troo.Routes.get.forEach(function(r) {
+			const path = r.route[0] === '/' ? r.route : '/' + r.route;
+			server.get(path, (req, res) => {
+				ReactDOMServer.renderToString(root)
+				res.send(ReactDOMServer.renderToString(root()))
+			});
+		})
+
+
+
+		// Router.get.bar = (args) => {
+		// 	console.log('in app router', args)
+		// }
+		// console.log('Routes', troo.Routes)
 	})
 })
 
