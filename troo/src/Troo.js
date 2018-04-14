@@ -9,7 +9,25 @@ import Wrapper from './Wrapper'
 class Cone {
   constructor() {
   	const self = this
+  	// const getRoutes = {}
     this._Actions = {};
+    this.Routes = {
+    	get: [],
+    	post: [],
+    }
+    const getProxy = (method) => {
+    	const setter = (obj, prop, callback) => {
+		    // this.Routes[method][prop] = callback;
+		    this.Routes[method].push({ route: prop,  callback });
+		    return true;
+		}
+		return new Proxy({}, { set: setter });
+    }
+    this.Router = {
+    	get: getProxy('get'),
+    	post: getProxy('post'),
+    }
+
     this.initStore = this.initStore.bind(this);
     this.store = null;
 

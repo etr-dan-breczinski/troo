@@ -2,16 +2,25 @@ const webpack = require('webpack');
 const express = require('express');
 // const troo = require('./src');
 const troo = require('./troo');
+const Router = troo.Router
 
+// console.log('asdf 20')
+// troo.Router.get.foo = (() => {
+// // 	console.log('asdfasdfasdf')
+// })
+// console.log('asdf 21')
+
+// console.log('troo.Router', troo.Router.get)
+// console.log(troo.Routes)
 
 
 // troo.AddAction('foo', () => { console.log('bar') })
-troo.Actions.foo = (arg1, arg2) => {
-	console.log('in foo callback', arg1, arg2.biz);
-}
+// troo.Actions.foo = (arg1, arg2) => {
+// 	console.log('in foo callback', arg1, arg2.biz);
+// }
 
-troo.Actions.foo({biz: 'bap'});
-
+// troo.Actions.foo({biz: 'bap'});
+// console.log('troo.Router', troo.Router)
 
 
 const BUILD_DIRECTORY = __dirname
@@ -91,19 +100,15 @@ webpack({
 			console.error('Unable to build app code...');
 			throw err;
 		}
-		// const app = require('./build/app.js')(troo);
-
-
-
 		const app = require('./build/app.js').default;
-		// app({ Server: troo.Server })
-
-// console.log('app', app)
-		// const app = require './build/app.js'
-		// const appSource = require('./app/index.js');
-
-		// build app
-		// pass server and 
+		app({
+			Server: troo.Server,
+			Router: troo.Router
+		});
+		Router.get.bar = (args) => {
+			console.log('in app router', args)
+		}
+		console.log('Routes', troo.Routes)
 	})
 })
 
